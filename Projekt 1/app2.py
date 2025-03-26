@@ -31,19 +31,19 @@ pixels_menu = Menu(menu, tearoff=0)
 
 pixels_menu.add_command(label="Konwersja do odcieni szarości",
                         command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                  rbtn9, 1, v, entry, error_label,button, label))
+                                                  rbtn9, 1, v, entry, error_label,button, label, save_btn))
 pixels_menu.add_command(label="Korekta jasności",
                         command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                  rbtn9, 2, v, entry, error_label,button, label))
+                                                  rbtn9, 2, v, entry, error_label,button, label, save_btn))
 pixels_menu.add_command(label="Korekta kontrastu",
                         command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                  rbtn9, 3, v, entry, error_label,button, label))
+                                                  rbtn9, 3, v, entry, error_label,button, label, save_btn))
 pixels_menu.add_command(label="Negatyw",
                         command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                  rbtn9, 4, v, entry, error_label,button, label))
+                                                  rbtn9, 4, v, entry, error_label,button, label, save_btn))
 pixels_menu.add_command(label="Binaryzacja",
                         command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                  rbtn9, 5, v, entry, error_label,button, label))
+                                                  rbtn9, 5, v, entry, error_label,button, label, save_btn))
 
 menu.add_cascade(label="Operacje na pikselach", menu=pixels_menu)
 
@@ -51,25 +51,25 @@ filters_menu = Menu(menu, tearoff=0)
 
 filters_menu.add_command(label="Filtr uśredniający",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 6, v, entry, error_label,button, label))
+                                                   rbtn9, 6, v, entry, error_label,button, label, save_btn))
 
 filters_menu.add_command(label="Filtr Gaussa",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 7, v, entry, error_label,button, label))
+                                                   rbtn9, 7, v, entry, error_label,button, label, save_btn))
 filters_menu.add_command(label="Filtr wyostrzający",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 8, v, entry, error_label,button, label))
+                                                   rbtn9, 8, v, entry, error_label,button, label, save_btn))
 filters_menu.add_command(label="Wykrywanie krawędzi - krzyż Robertsa",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 9, v, entry, error_label,button, label))
+                                                   rbtn9, 9, v, entry, error_label,button, label, save_btn))
 
 filters_menu.add_command(label="Wykrywanie krawędzi - operator Sobela",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 10, v, entry, error_label,button, label))
+                                                   rbtn9, 10, v, entry, error_label,button, label, save_btn))
 
 filters_menu.add_command(label="Ustawienie dowolnych wag filtrów",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 16, v, entry, error_label,button, label))
+                                                   rbtn9, 16, v, entry, error_label,button, label, save_btn))
 
 menu.add_cascade(label="Filtry", menu=filters_menu)
 
@@ -77,21 +77,21 @@ wykresy_menu = Menu(menu, tearoff=0)
 
 wykresy_menu.add_command(label="Histogram",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 11, v, entry, error_label,button, label))
+                                                   rbtn9, 11, v, entry, error_label,button, label, save_btn))
 
 wykresy_menu.add_command(label="Histogram kolorów",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 12, v, entry, error_label,button, label))
+                                                   rbtn9, 12, v, entry, error_label,button, label, save_btn))
 wykresy_menu.add_command(label="Projekcja pozioma",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 13, v, entry, error_label,button, label))
+                                                   rbtn9, 13, v, entry, error_label,button, label, save_btn))
 wykresy_menu.add_command(label="Projekcja pionowa",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 14, v, entry, error_label,button, label))
+                                                   rbtn9, 14, v, entry, error_label,button, label, save_btn))
 
 wykresy_menu.add_command(label="Projekcja pozioma i pionowa",
                          command=lambda: menu_func(sl, fig2, canvas2, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-                                                   rbtn9, 15, v, entry, error_label,button, label))
+                                                   rbtn9, 15, v, entry, error_label,button, label, save_btn))
 
 menu.add_cascade(label="Wykresy", menu=wykresy_menu)
 
