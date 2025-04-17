@@ -1,15 +1,11 @@
-# Funkcja do wczytania obrazu
 from tkinter import filedialog
 
 import numpy as np
-from PIL import Image  # Do obsługi obrazów
-
-
-# from app2 import pixel_matrix_grey
+from PIL import Image
 
 
 def menu_func(slider, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
-              rbtn9, func_nr, v, entry, error_label,button, label, save_btn):
+              rbtn9, func_nr, v, entry, error_label, button, label, save_btn):
     global sl_func
     sl_func = -1
     slider.set(0)
@@ -132,20 +128,19 @@ def menu_func(slider, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7,
             sharp_filter(1, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7, rbtn9)
 
 
-# Funkcja do wyświetlenia obrazu (w Tkinter)
 def show_image_tkinter(matrix, fig, canvas):
-    print(matrix.shape)
-    print(sl_func)
-    fig.clear()  # Czyść poprzednie wykresy
-    ax = fig.add_subplot(111)  # Dodaj subplot do rysowania obrazu
+    fig.clear()
+    ax = fig.add_subplot(111)
+
     ax.imshow(matrix)
-    ax.axis('off')  # Wyłącz osie
+    ax.axis('off')
     fig.tight_layout(pad=0)
-    canvas.draw()  # Odśwież płótno
+    # global kept
+
+    canvas.draw()
 
 
 def load_image(fig, canvas, lbl):
-    # Wybór pliku za pomocą filedialog
     filepath = filedialog.askopenfilename(
         filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.bmp")]
     )
@@ -155,37 +150,30 @@ def load_image(fig, canvas, lbl):
         global sl_func
         sl_func = -1
         pixel_matrix = np.array(image)
-        # Wyświetlenie obrazu w Tkinter
         show_image_tkinter(pixel_matrix, fig, canvas)
-        # lbl.configure(text="załadowani")
 
         lbl.grid_remove()
 
 
-# Funkcja zapisująca obraz do pliku
 def save_image(root, lbl_status):
-    # Wybór lokalizacji i nazwy pliku do zapisu
     file_path = filedialog.asksaveasfilename(
         defaultextension=".png",
         filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg"), ("All files", "*.*")]
     )
     if file_path:
         pm = pixel_matrix_2.astype(np.uint8)
-        # Konwersja macierzy pikseli z powrotem na obraz
         image = Image.fromarray(pm)
         image.save(file_path)
-        # Zapisanie obrazu do pliku .bmp        pixel_matrix_2.save(file_path)
         show_temporary_message(f"Obraz zapisano jako: {file_path}", root, lbl_status)
 
 
 def show_temporary_message(message, root, lbl_status):
-    lbl_status.config(text=message)  # Ustawienie tekstu komunikatu
+    lbl_status.config(text=message)
     lbl_status.grid_remove()
-    root.after(5000, lambda: hide_message(lbl_status))  # Ukrycie komunikatu po 5000 ms (5 sekund)
+    root.after(5000, lambda: hide_message(lbl_status))
 
 
 def hide_message(lbl_status):
-    # lbl_status.config(text="")
     lbl_status.grid_remove()
 
 
@@ -203,7 +191,6 @@ def change_grey(fig, canvas, show=1):
     pixel_matrix_2 = np.zeros((pixel_matrix.shape[0], pixel_matrix.shape[1], 3), dtype=int)
     for i in range(pixel_matrix.shape[0]):
         for j in range(pixel_matrix.shape[1]):
-            # r, g, b = pixel_matrix[i,j]
             s = np.mean(pixel_matrix[i, j])
             pixel_matrix_2[i, j] = [s, s, s]
     pixel_matrix_grey = pixel_matrix_2.copy()
@@ -239,8 +226,6 @@ def brigthness_change(slider, fig, canvas):
 
 
 def filter_func(v, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7, rbtn9):
-    print("filter")
-    print(sl_func)
     if sl_func > -2:
         rbtn1.grid_remove()
         rbtn2.grid_remove()
@@ -275,7 +260,6 @@ def filter_func(v, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7, rbtn9):
             rbtn9.config(text='b=6')
             gauss_filter(v, fig, canvas, rbtn1, rbtn2, rbtn3, rbtn5, rbtn7, rbtn9)
         elif sl_func == -4:
-            print("sl = 4", )
             rbtn7.grid_remove()
             rbtn9.grid_remove()
             rbtn1.config(text='maska nr 1')
@@ -390,7 +374,6 @@ def binary(slider, fig, canvas, show=1):
     pixel_matrix_bin = pixel_matrix_2.copy()
 
     if show == 1:
-        print("show")
         show_image_tkinter(pixel_matrix_2, fig, canvas)
 
 
@@ -447,21 +430,17 @@ def cal_weights(size, weights, i, j, mean):
 
 
 def apply_filter(fig, canvas, entry, error_label):
-    # Pobranie tekstu z pola Entry
     weights_input = entry.get()
     try:
-        # Konwersja wprowadzonego tekstu na macierz numpy
-        weights = np.array(eval(weights_input))  # Użycie eval do konwersji string na listę
+        weights = np.array(eval(weights_input))
         size = len(weights)
 
-        # Wywołanie funkcji use_filter
         use_filter(size, weights, fig, canvas)
 
-        # Wyczyść komunikat o błędzie
         error_label.config(text="")
     except Exception as e:
-        # Wyświetlenie błędu w aplikacji
         error_label.config(text=f"Błąd: {e}")
+
 
 def use_filter(size, weights, fig, canvas, mean=1):
     global pixel_matrix_2
@@ -557,8 +536,6 @@ def cal_conv(i, j):
 
 
 def roberts_cross(fig, canvas):
-    # weights_1 = [[1,0],[0,-1]]
-    # weights_2 = [[0,1],[-1,0]]
     global sl_func
     sl_func = -1
     global pixel_matrix_2
@@ -592,14 +569,12 @@ def sobel_operator(fig, canvas):
         for j in range(m - 1):
             rx, gx, bx = cal_weights(1, weightsx, i, j, 0)
             ry, gy, by = cal_weights(1, weightsy, i, j, 0)
-            print(rx, ry)
             r = int((rx ^ 2 + ry ^ 2) ** 0.5)
             g = int((gx ^ 2 + gy ^ 2) ** 0.5)
             b = int((bx ^ 2 + by ^ 2) ** 0.5)
             r = in_range(r)
             g = in_range(g)
             b = in_range(b)
-            print(r, g, b)
             pixel_matrix_2[i, j] = [r, g, b]
     pixel_matrix_2 = (pixel_matrix_2 / pixel_matrix_2.max() * 255).astype(np.uint8)
     show_image_tkinter(pixel_matrix_2, fig, canvas)
@@ -625,341 +600,31 @@ def histogram(fig, canvas):
     canvas.draw()
 
 
-
-
 def histogram_col(fig, canvas):
-    # Przetwarzanie obrazu na skalę szarości
     change_grey(fig, canvas, 0)
-
-    # Przygotowanie danych dla histogramów
     list_grey = col_list(pixel_matrix_grey, 0)
     list_red = col_list(pixel_matrix, 0)
     list_green = col_list(pixel_matrix, 1)
     list_blue = col_list(pixel_matrix, 2)
-    # Wyczyść przekazaną figurę
     fig.clear()
-
-    # Dodawanie wykresów (subplots)
     ax1 = fig.add_subplot(2, 2, 1)
     ax1.hist(list_red, color='red', bins=max(list_red) - min(list_red))
     ax1.set_title('Histogram Red', fontsize=10)
-
 
     ax2 = fig.add_subplot(2, 2, 2)
     ax2.hist(list_green, color='green', bins=max(list_green) - min(list_green))
     ax2.set_title('Histogram Green', fontsize=10)
 
-
     ax3 = fig.add_subplot(2, 2, 3)
     ax3.hist(list_blue, color='blue', bins=max(list_blue) - min(list_blue))
     ax3.set_title('Histogram Blue', fontsize=10)
-
 
     ax4 = fig.add_subplot(2, 2, 4)
     ax4.hist(list_grey, color='grey', bins=max(list_grey) - min(list_grey))
     ax4.set_title('Histogram Brightness', fontsize=10)
 
-    # Wyregulowanie rozstawienia wykresów
-    # fig.tight_layout()
     fig.subplots_adjust(hspace=0.4, wspace=0.4, left=0.1, right=0.9, top=0.9, bottom=0.1)
-
-    # Odświeżenie canvas
     canvas.draw()
-
-
-# def projection_horizontal(fig, canvas, ax):
-#     # 0 - horizontal
-#     # 1 - vertical
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sums = np.zeros(n, dtype=int)
-#     for i in range(n):
-#         for j in range(m):
-#             sums[i] += pixel_matrix_grey[i, j, 0]
-#
-#     # fig.clear()
-#
-#     ax.barh(range(len(sums)), sums, color='grey')
-#     ax.set_title('Projekcja pozioma', fontsize=14)
-#     ax.set_ylim(0, n)
-#     ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-#     ax.set_ylabel('Nr wiersza', fontsize=12)
-#     ax.invert_yaxis()
-#     canvas.draw()
-#
-#
-# def projection_vertical(fig, canvas, ax):
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sums = np.zeros(m, dtype=int)
-#     for i in range(m):
-#         for j in range(n):
-#             sums[i] += pixel_matrix_grey[j, i, 0]
-#
-#     ax.bar(range(len(sums)), sums, color='grey')
-#     ax.set_title('Projekcja pionowa', fontsize=14)
-#     ax.set_xlim(0, m)
-#
-#     ax.set_xlabel('Suma jasności w kolumnie', fontsize=12)
-#     ax.set_ylabel('Nr kolumny', fontsize=12)
-#     canvas.draw()
-#
-#
-# # Funkcja do wyświetlenia obrazu (w Tkinter)
-# def show_image_tkinter_ax(matrix, fig, canvas, ax):
-#     ax.clear()  # Wyczyszczenie osi
-#     ax.imshow(matrix)  # Wyświetlenie obrazu z proporcjami
-#     ax.axis('off')  # Wyłącz osie
-#     ax.axis('off')  # Wyłączenie osi
-#     ax.set_xlim(0, matrix.shape[1])  # Szerokość obrazu (kolumny)
-#     ax.set_ylim(matrix.shape[0], 0)
-#
-#     canvas.draw()  # Odśwież płótno
-#
-#
-# def projections(fig, canvas):
-#     """
-#     Wyświetla układ 2x2 z obrazkiem, projekcjami i pustym polem.
-#     Obraz w [0,0] zajmuje więcej miejsca niż pozostałe subploty.
-#     """
-#     fig.clear()
-#
-#     # Wymiary obrazu
-#     height, width = pixel_matrix.shape[:2]
-#
-#     # Tworzenie układu subplotów z większym miejscem na obraz
-#     gs = fig.add_gridspec(
-#         2, 2,
-#         height_ratios=[3, 1],  # Pierwszy wiersz (z obrazkiem i horizontal) ma 3x więcej miejsca
-#         width_ratios=[3, 1]  # Pierwsza kolumna (z obrazkiem i vertical) ma 3x więcej miejsca
-#     )
-#
-#     # Obraz w [0,0]
-#     ax1 = fig.add_subplot(gs[0, 0])
-#     show_image_tkinter_ax(pixel_matrix, fig, canvas, ax1)
-#
-#     # Projekcja pozioma w [0,1]
-#     ax2 = fig.add_subplot(gs[0, 1])
-#     projection_horizontal(fig, canvas, ax2)
-#
-#     # Projekcja pionowa w [1,0]
-#     ax3 = fig.add_subplot(gs[1, 0])
-#     projection_vertical(fig, canvas, ax3)
-#
-#     # Puste pole w [1,1]
-#     ax4 = fig.add_subplot(gs[1, 1])
-#     ax4.axis('off')  # Wyłączenie osi w pustym polu
-#
-#     # Odświeżenie canvasu
-#     canvas.draw()
-
-#
-# def projection_horizontal(fig, canvas, ax):
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sums = np.zeros(n, dtype=int)
-#     for i in range(n):
-#         for j in range(m):
-#             sums[i] += pixel_matrix_grey[i, j, 0]
-#
-#     ax.barh(range(len(sums)), sums, color='grey')
-#     ax.set_title('Projekcja pozioma', fontsize=14)
-#     ax.set_xlim(0, np.max(sums))  # Dopasowanie długości wykresu do sumy jasności
-#     ax.set_ylim(0, n)  # Długość wykresu poziomego odpowiada liczbie wierszy
-#     ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-#     ax.set_ylabel('Nr wiersza', fontsize=12)
-#     ax.invert_yaxis()  # Odwrócenie osi Y, aby zacząć od góry
-#     # fig.tight_layout()
-#     fig.subplots_adjust(hspace=0.4, wspace=0.4, left=0.1, right=0.9, top=0.9, bottom=0.1)
-#
-#     canvas.draw()
-#
-#
-# def projection_vertical(fig, canvas, ax):
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sums = np.zeros(m, dtype=int)
-#     for i in range(m):
-#         for j in range(n):
-#             sums[i] += pixel_matrix_grey[j, i, 0]
-#     print(sums)
-#     ax.bar(range(len(sums)), sums, color='grey')
-#     ax.set_title('Projekcja pionowa', fontsize=14)
-#     ax.set_ylim(0, np.max(sums))  # Dopasowanie wysokości wykresu do sumy jasności
-#     ax.set_xlim(0, m)  # Długość wykresu pionowego odpowiada liczbie kolumn
-#     ax.set_xlabel('Suma jasności w kolumnie', fontsize=12)
-#     ax.set_ylabel('Nr kolumny', fontsize=12)
-#     # fig.tight_layout()
-#     fig.subplots_adjust(hspace=0.4, wspace=0.4, left=0.1, right=0.9, top=0.9, bottom=0.1)
-#
-#     canvas.draw()
-
-
-# # Funkcja do wyświetlenia obrazu (w Tkinter)
-# def show_image_tkinter_ax(matrix, fig, canvas, ax):
-#     ax.clear()  # Wyczyszczenie osi
-#     ax.imshow(matrix)  # Wyświetlenie obrazu z proporcjami
-#     ax.axis('off')  # Wyłącz osie
-#     ax.set_xlim(0, matrix.shape[1])  # Szerokość obrazu (kolumny)
-#     ax.set_ylim(matrix.shape[0], 0)
-#
-#     canvas.draw()  # Odśwież płótno
-#
-
-# def projection_horizontal(fig, canvas, ax):
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sumsp = np.zeros(n, dtype=int)
-#     for i in range(n):
-#         for j in range(m):
-#             sumsp[i] += pixel_matrix_grey[i, j, 0]
-#     print(sumsp)
-#     print(len(sumsp))
-#     print(range(len(sumsp)))
-#     # ax.barh(range(len(sumsp)), sumsp, color='grey')
-#     # ax.plot(range(len(sumsp)), sumsp, color='grey')
-#     # ax.fill_between(sumsp, range(len(sumsp)), color='grey')  # Kolorowe wypełnienie pod wykresem
-#     #
-#     # ax.plot(sumsp, range(len(sumsp)), color='grey')
-#
-#     ax.fill_between(sumsp,range(n), color='lightblue', alpha=0.5)  # Kolorowe wypełnienie pod wykresem
-#
-#     # Rysowanie wykresu
-#     ax.plot(sumsp,range(n), color='grey')  # sumsp na osi Y, numery wierszy na osi X
-#
-#
-#     ax.set_title('Projekcja pozioma', fontsize=14)
-#     ax.set_title('Projekcja pozioma', fontsize=14)
-#     ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-#     ax.set_ylabel('Nr wiersza', fontsize=12)
-#
-#     # Ustawienia osi
-#     ax.xaxis.set_ticks_position('top')  # Ustawienie osi X na górze
-#     ax.yaxis.set_ticks_position('left')  # Ustawienie osi Y po lewej stronie
-#
-#     ax.set_xlim(0, max(sumsp))  # Dopasowanie zakresu na osi X
-#     ax.set_ylim(0, n)  # Dopasowanie zakresu na osi Y, aby obejmowała liczbę wierszy
-#     ax.invert_yaxis()  # Odwrócenie osi Y, aby numer wiersza zaczynał się od góry
-#
-#     # ax.set_xlim(0, np.max(sumsp))  # Dopasowanie długości wykresu do sumy jasności
-#     # ax.set_ylim(0, n)  # Długość wykresu poziomego odpowiada liczbie wierszy
-#     # ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-#     # ax.set_ylabel('Nr wiersza', fontsize=12)
-#     # ax.invert_yaxis()  # Odwrócenie osi Y, aby zacząć od góry
-#     canvas.draw()
-#
-#
-# def projection_vertical(fig, canvas, ax):
-#     global sl_func
-#     sl_func = -1
-#     global pixel_matrix_2
-#
-#     n = pixel_matrix.shape[0]
-#     m = pixel_matrix.shape[1]
-#     change_grey(fig, canvas, 0)
-#     sumsp = np.zeros(m, dtype=int)
-#     for i in range(m):
-#         for j in range(n):
-#             sumsp[i] += pixel_matrix_grey[j, i, 0]
-#     print(sumsp)
-#
-#     ax.plot(range(len(sumsp)), sumsp, color='grey')
-#     ax.fill_between(range(m), sumsp, color='grey')  # Kolorowe wypełnienie pod wykresem
-#
-#     # ax.set_title('Projekcja pozioma', fontsize=14)
-#     # ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-#     # ax.set_ylabel('Nr wiersza', fontsize=12)
-#     #
-#     # # Ustawienia osi
-#     # ax.xaxis.set_ticks_position('top')  # Ustawienie osi X na górze
-#     # ax.yaxis.set_ticks_position('left')  # Ustawienie osi Y po lewej stronie
-#     #
-#     # ax.set_xlim(0, max(sumsp))  # Dopasowanie zakresu na osi X
-#     # ax.set_ylim(0, n)  # Dopasowanie zakresu na osi Y, aby obejmowała liczbę wierszy
-#     # ax.invert_yaxis()
-#     # ax.bar(range(len(sumsp)), sumsp, color='grey')
-#     ax.set_title('Projekcja pionowa', fontsize=14)
-#     ax.set_ylim(0, np.max(sumsp))  # Dopasowanie wysokości wykresu do sumy jasności
-#     ax.set_xlim(0, len(sumsp))  # Długość wykresu pionowego odpowiada liczbie kolumn
-#     ax.set_xlabel('Nr kolumny', fontsize=12)
-#     ax.set_ylabel('Suma jasności w kolumnie', fontsize=12)
-#     ax.invert_yaxis()  # Odwrócenie osi Y, aby numer wiersza zaczynał się od góry
-#
-#     canvas.draw()
-#
-#
-# # Funkcja do wyświetlenia obrazu (w Tkinter)
-# def show_image_tkinter_ax(matrix, fig, canvas, ax):
-#     ax.clear()  # Wyczyszczenie osi
-#     ax.imshow(matrix)  # Wyświetlenie obrazu z proporcjami
-#     ax.axis('off')  # Wyłącz osie
-#     ax.set_xlim(0, matrix.shape[1])  # Szerokość obrazu (kolumny)
-#     ax.set_ylim(matrix.shape[0], 0)
-#
-#     canvas.draw()  # Odśwież płótno
-#
-#
-# def projections(fig, canvas):
-#     """
-#     Wyświetla układ 2x2 z obrazkiem, projekcjami i pustym polem.
-#     Obraz w [0,0] zajmuje więcej miejsca niż pozostałe subploty.
-#     """
-#     fig.clear()
-#
-#     # Wymiary obrazu
-#     height, width = pixel_matrix.shape[:2]
-#
-#     # Tworzenie układu subplotów z większym miejscem na obraz
-#     gs = fig.add_gridspec(
-#         2, 2,
-#         height_ratios=[3, 1],  # Pierwszy wiersz (z obrazkiem i horizontal) ma 3x więcej miejsca
-#         width_ratios=[3, 1]  # Pierwsza kolumna (z obrazkiem i vertical) ma 3x więcej miejsca
-#     )
-#
-#     # Obraz w [0,0]
-#     ax1 = fig.add_subplot(gs[0, 0])
-#     show_image_tkinter_ax(pixel_matrix, fig, canvas, ax1)
-#
-#     # Projekcja pozioma w [0,1] (dostosowanie wysokości wykresu do wysokości obrazu)
-#     ax2 = fig.add_subplot(gs[0, 1])
-#     projection_horizontal(fig, canvas, ax2)
-#
-#     # Projekcja pionowa w [1,0] (dostosowanie długości wykresu do szerokości obrazu)
-#     ax3 = fig.add_subplot(gs[1, 0])
-#     projection_vertical(fig, canvas, ax3)
-#
-#     # Puste pole w [1,1]
-#     ax4 = fig.add_subplot(gs[1, 1])
-#     ax4.axis('off')  # Wyłączenie osi w pustym polu
-#     fig.subplots_adjust(hspace=0.4, wspace=0.4, left=0.1, right=0.9, top=0.9, bottom=0.1)
-#
-#     # Odświeżenie canvasu
-#     canvas.draw()
 
 
 def projection_horizontal(fig, canvas, ax):
@@ -974,35 +639,22 @@ def projection_horizontal(fig, canvas, ax):
     for i in range(n):
         for j in range(m):
             sumsp[i] += pixel_matrix_grey[i, j, 0]
-    print(sumsp)
-    print(len(sumsp))
-    print(range(len(sumsp)))
-    # ax.barh(range(len(sumsp)), sumsp, color='grey')
-    # ax.plot(range(len(sumsp)), sumsp, color='grey')
-    # ax.plot(sumsp, range(len(sumsp)), color='grey')
-    # ax.fill_between(sumsp, range(n), color='grey')  # Kolorowe wypełnienie pod wykresem
 
-    ax.plot(sumsp, range(len(sumsp)), color='grey')  # Wykres poziomy
-    ax.fill_betweenx(range(n), 0, sumsp, color='grey')  # Poprawne kolorowanie obszaru pod wykresem
+    ax.plot(sumsp, range(len(sumsp)), color='grey')
+    ax.fill_betweenx(range(n), 0, sumsp, color='grey')
 
     ax.set_title('Projekcja pozioma', fontsize=14)
     ax.set_title('Projekcja pozioma', fontsize=14)
     ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
     ax.set_ylabel('Nr wiersza', fontsize=12)
 
-    # Ustawienia osi
-    ax.xaxis.set_ticks_position('top')  # Ustawienie osi X na górze
-    ax.yaxis.set_ticks_position('left')  # Ustawienie osi Y po lewej stronie
+    ax.xaxis.set_ticks_position('top')
+    ax.yaxis.set_ticks_position('left')
 
-    ax.set_xlim(0, max(sumsp))  # Dopasowanie zakresu na osi X
-    ax.set_ylim(0, n)  # Dopasowanie zakresu na osi Y, aby obejmowała liczbę wierszy
-    ax.invert_yaxis()  # Odwrócenie osi Y, aby numer wiersza zaczynał się od góry
+    ax.set_xlim(0, max(sumsp))
+    ax.set_ylim(0, n)
+    ax.invert_yaxis()
 
-    # ax.set_xlim(0, np.max(sumsp))  # Dopasowanie długości wykresu do sumy jasności
-    # ax.set_ylim(0, n)  # Długość wykresu poziomego odpowiada liczbie wierszy
-    # ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-    # ax.set_ylabel('Nr wiersza', fontsize=12)
-    # ax.invert_yaxis()  # Odwrócenie osi Y, aby zacząć od góry
     canvas.draw()
 
 
@@ -1018,77 +670,50 @@ def projection_vertical(fig, canvas, ax):
     for i in range(m):
         for j in range(n):
             sumsp[i] += pixel_matrix_grey[j, i, 0]
-    print(sumsp)
 
     ax.plot(range(len(sumsp)), sumsp, color='grey')
-    ax.fill_between(range(m), sumsp, color='grey')  # Kolorowe wypełnienie pod wykresem
-
-    # ax.set_title('Projekcja pozioma', fontsize=14)
-    # ax.set_xlabel('Suma jasności w wierszu', fontsize=12)
-    # ax.set_ylabel('Nr wiersza', fontsize=12)
-    #
-    # # Ustawienia osi
-    # ax.xaxis.set_ticks_position('top')  # Ustawienie osi X na górze
-    # ax.yaxis.set_ticks_position('left')  # Ustawienie osi Y po lewej stronie
-    #
-    # ax.set_xlim(0, max(sumsp))  # Dopasowanie zakresu na osi X
-    # ax.set_ylim(0, n)  # Dopasowanie zakresu na osi Y, aby obejmowała liczbę wierszy
-    # ax.invert_yaxis()
-    # ax.bar(range(len(sumsp)), sumsp, color='grey')
+    ax.fill_between(range(m), sumsp, color='grey')
     ax.set_title('Projekcja pionowa', fontsize=14)
-    ax.set_ylim(0, np.max(sumsp))  # Dopasowanie wysokości wykresu do sumy jasności
-    ax.set_xlim(0, len(sumsp))  # Długość wykresu pionowego odpowiada liczbie kolumn
+    ax.set_ylim(0, np.max(sumsp))
+    ax.set_xlim(0, len(sumsp))
     ax.set_xlabel('Nr kolumny', fontsize=12)
     ax.set_ylabel('Suma jasności w kolumnie', fontsize=12)
-    ax.invert_yaxis()  # Odwrócenie osi Y, aby numer wiersza zaczynał się od góry
+    ax.invert_yaxis()
 
     canvas.draw()
 
 
-# Funkcja do wyświetlenia obrazu (w Tkinter)
 def show_image_tkinter_ax(matrix, fig, canvas, ax):
-    ax.clear()  # Wyczyszczenie osi
-    ax.imshow(matrix)  # Wyświetlenie obrazu z proporcjami
-    ax.axis('off')  # Wyłącz osie
-    ax.set_xlim(0, matrix.shape[1])  # Szerokość obrazu (kolumny)
+    ax.clear()
+    ax.imshow(matrix)
+    ax.axis('off')
+    ax.set_xlim(0, matrix.shape[1])
     ax.set_ylim(matrix.shape[0], 0)
 
-    canvas.draw()  # Odśwież płótno
+    canvas.draw()
 
 
 def projections(fig, canvas):
-    """
-    Wyświetla układ 2x2 z obrazkiem, projekcjami i pustym polem.
-    Obraz w [0,0] zajmuje więcej miejsca niż pozostałe subploty.
-    """
     fig.clear()
 
-    # Wymiary obrazu
-    height, width = pixel_matrix.shape[:2]
-
-    # Tworzenie układu subplotów z większym miejscem na obraz
     gs = fig.add_gridspec(
         2, 2,
-        height_ratios=[3, 1],  # Pierwszy wiersz (z obrazkiem i horizontal) ma 3x więcej miejsca
-        width_ratios=[3, 1]  # Pierwsza kolumna (z obrazkiem i vertical) ma 3x więcej miejsca
+        height_ratios=[3, 1],
+        width_ratios=[3, 1]
     )
 
-    # Obraz w [0,0]
     ax1 = fig.add_subplot(gs[0, 0])
     show_image_tkinter_ax(pixel_matrix, fig, canvas, ax1)
 
-    # Projekcja pozioma w [0,1] (dostosowanie wysokości wykresu do wysokości obrazu)
     ax2 = fig.add_subplot(gs[0, 1])
     projection_horizontal(fig, canvas, ax2)
 
-    # Projekcja pionowa w [1,0] (dostosowanie długości wykresu do szerokości obrazu)
     ax3 = fig.add_subplot(gs[1, 0])
     projection_vertical(fig, canvas, ax3)
 
-    # Puste pole w [1,1]
     ax4 = fig.add_subplot(gs[1, 1])
-    ax4.axis('off')  # Wyłączenie osi w pustym polu
+    ax4.axis('off')
     fig.subplots_adjust(hspace=0.4, wspace=0.4, left=0.1, right=0.9, top=0.9, bottom=0.1)
 
-    # Odświeżenie canvasu
     canvas.draw()
+
