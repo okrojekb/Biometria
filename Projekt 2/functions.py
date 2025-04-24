@@ -251,7 +251,11 @@ def full_process(canvas1, fig1, canvas2, fig2, canvas3, fig3, label):
     ax.add_patch(circle2)
     fig1.tight_layout()
     canvas1.draw()
+
+
     normalized_cropped = normalize_iris(iris_grey, x_center_cropped, y_center_cropped, rad_cropped, rad_iris_cropped)
+
+    print(normalized_cropped)
     fig2.clear()
     ax = fig2.add_subplot(111)
     ax.imshow(normalized_cropped, cmap='gray', aspect='equal')
