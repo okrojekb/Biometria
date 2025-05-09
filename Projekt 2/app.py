@@ -16,13 +16,15 @@ kod2 = None
 frame = Frame(root)
 frame.pack(pady=20, padx=20)
 
-load_button1 = Button(frame, text="Load Iris 1", command=lambda: left(canvas1, fig1, canvas2, fig2, canvas3, fig3, label))
+load_button1 = Button(frame, text="Load Iris 1",
+                      command=lambda: left(canvas1, fig1, canvas2, fig2, canvas3, fig3, label))
 load_button1.grid(row=0, column=0, padx=10, pady=10)
 
-load_button2 = Button(frame, text="Load Iris 2", command=lambda: right(canvas4, fig4, canvas5, fig5, canvas6, fig6, label))
+load_button2 = Button(frame, text="Load Iris 2",
+                      command=lambda: right(canvas4, fig4, canvas5, fig5, canvas6, fig6, label))
 load_button2.grid(row=0, column=1, padx=10, pady=10)
 
-plot_button = Button(frame, text="Compare", command= lambda: compare(label))
+plot_button = Button(frame, text="Compare", command=lambda: compare(label))
 plot_button.grid(row=0, column=2, padx=10, pady=10)
 
 label = Label(frame, text="")
